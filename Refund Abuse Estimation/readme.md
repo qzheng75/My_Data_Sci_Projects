@@ -1,3 +1,4 @@
+The project is similar to my experience during internship at Apple as a data analyst. Due to privacy of the data of the company, I reproduce this project that is similar in process and ideas with the virtual, man-made dataset customer_churn_data.
 This project is about estimating whether users will abuse the refund policy of a company.
 The project is an integration of machine learning techniques, including:
 - Preparations for modeling:
