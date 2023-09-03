@@ -65,7 +65,7 @@ class Homework01Algorithms:
 
         Constraints:
         - n must be a power of 2.
-        - Length of input vector v has to be n.
+        - Length of input vector v has to be n
 
         Time complexity:
         - Worst case: O(nlogn)

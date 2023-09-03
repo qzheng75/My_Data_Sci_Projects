@@ -37,8 +37,21 @@ class InClassAlgorithms:
         assert all(i in {0, 1} for i in x), 'x is not a binary-represented number.'
         assert all(i in {0, 1} for i in y), 'y is not a binary-represented number.'
         assert len(x) == len(y), f'Two arrays must be of same size, but got {len(x)} and {len(y)}'
+        return InClassAlgorithms._multiply_binary_numbers_helper(x, y)
+
+    @staticmethod
+    def _multiply_binary_numbers_helper(x: np.ndarray, y: np.ndarray) -> int:
+        """
+        Helper method for multipling two n-bit binary-represented numbers.
+
+        Parameters:
+        - x (np.ndarray): The first n-bit binary number represented as a NumPy array.
+        - y (np.ndarray): The second n-bit binary number represented as a NumPy array.
+
+        Returns:
+        - int: The result of A * B as an integer.
+        """
         n = len(x)
-        assert n % 2 == 0, f'Representation of numbers has to have even number of bits.'
         if n == 0:
             return 0
         if n == 1:
@@ -46,9 +59,9 @@ class InClassAlgorithms:
         mid_idx = n // 2
         x_left, x_right = x[0 : mid_idx], x[mid_idx :]
         y_left, y_right = y[0 : mid_idx], y[mid_idx :]
-        term1 = (pow(2, n) - pow(2, n // 2)) * InClassAlgorithms.multiply_binary_numbers(x_left, y_left)
-        term2 = pow(2, n //2) * InClassAlgorithms.multiply_binary_numbers(x_left + x_right, y_left + y_right)
-        term3 = (1 - pow(2, n // 2)) * InClassAlgorithms.multiply_binary_numbers(x_right, y_right)
+        term1 = (pow(2, n) - pow(2, n // 2)) * InClassAlgorithms._multiply_binary_numbers_helper(x_left, y_left)
+        term2 = pow(2, n //2) * InClassAlgorithms._multiply_binary_numbers_helper(x_left + x_right, y_left + y_right)
+        term3 = (1 - pow(2, n // 2)) * InClassAlgorithms._multiply_binary_numbers_helper(x_right, y_right)
         return term1 + term2 + term3
     
 
@@ -81,7 +94,7 @@ class InClassAlgorithms:
             return InClassAlgorithms._brute_force_k_select(arr, k)
         num_groups = math.ceil(n / M)
         chunks = [arr[i : i + M] for i in range(0, n, M)]
-        chunk_medians = [InClassAlgorithms._brute_force_k_select(subarr, M // 2)
+        chunk_medians = [InClassAlgorithms._brute_force_k_select(subarr, len(subarr) // 2)
                          for subarr in chunks]
         median = InClassAlgorithms.k_select(chunk_medians, num_groups // 2)
         pivot_idx = InClassAlgorithms._partition(arr, median)
@@ -147,6 +160,7 @@ class InClassAlgorithms:
         - Worst case: O(nlogn). Yet in median of medians algorithm, we consider it
         to be O(1) since each sort is performed on constant-length arrays.
         """
+        assert k < len(arr), f"{k} is out of bounds for array of length {len(arr)}."
         sorted_arr = sorted(arr)
         return sorted_arr[k]
     
@@ -216,7 +230,7 @@ class InClassAlgorithms:
         - int: The result of 'base' raised to the power of 'exp'.
 
         Constrants:
-        - his method currently only supports exp >= 0.
+        - This method currently only supports exp >= 0.
 
         Time complexity:
         - Worst case: O(logn)
@@ -232,29 +246,4 @@ class InClassAlgorithms:
         else:
             sqrt = InClassAlgorithms.fast_pow(base, (exp - 1) // 2)
             return sqrt * sqrt * base
-
-
-if __name__ == '__main__':
-    # x = InClassAlgorithms.int_to_binary_list(11)
-    # y = InClassAlgorithms.int_to_binary_list(259)
-    # print(InClassAlgorithms.multiply_binary_numbers(x, y))
-    test_arr = list(range(1, 31))
-    random.shuffle(test_arr)
-    # print(test_arr)
-    # for i in range(30):
-    #     print(InClassAlgorithms.k_select(test_arr, i))
-
-    matrix_A = np.array([[1, 1, 1, 1],
-                [2, 2, 2, 2],
-                [3, 3, 3, 3],
-                [2, 2, 2, 2]])
-    
-    matrix_B = np.array([[1, 1, 1, 1],
-                [2, 2, 2, 2],
-                [3, 3, 3, 3],
-                [2, 2, 2, 2]])
-    
-    result_matrix = InClassAlgorithms.strassen_fast_matmul(matrix_A, matrix_B)
-
-    print(InClassAlgorithms.fast_pow(2, 10))
     
