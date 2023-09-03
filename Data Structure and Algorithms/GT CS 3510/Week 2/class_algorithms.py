@@ -1,7 +1,6 @@
 from typing import List
 import numpy as np
 import math
-import random
 
 
 class InClassAlgorithms:
@@ -176,11 +175,16 @@ class InClassAlgorithms:
         Returns:
         - np.ndarray: The result of matrix multiplication.
 
+        Constraint:
+        - Both input matrices must be square matrices.
+
         Time complexity:
         - Worst case: O(n^{log7})
         """
         row1, col1 = mat1.shape
         row2, col2 = mat2.shape
+        assert row1 == col1, f"Mat1 is not square, got shape {row1} * {col1}"
+        assert row2 == col2, f"Mat2 is not square, got shape {row2} * {col2}"
         assert col1 == row2, f"Shape mismatch between two matrices: get {col1} and {row2}."
 
         if col1 == 1:
