@@ -63,8 +63,8 @@ class Homework01Algorithms:
         if n == 1:
             return np.array(v)
         mid_idx = n // 2
-        v_upper = np.array(v[0 : mid_idx])
-        v_lower = np.array(v[mid_idx :])
+        v_upper = v[0 : mid_idx]
+        v_lower = v[mid_idx :]
         S_v1 = Homework01Algorithms.star_matrix_multiplication(n // 2, v_upper)
         S_v2 = Homework01Algorithms.star_matrix_multiplication(n // 2, v_lower)
         S_upper = 3 * S_v1 + v_lower.reshape(-1, 1)
