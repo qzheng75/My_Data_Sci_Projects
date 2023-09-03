@@ -4,26 +4,34 @@ import numpy as np
 
 class Homework01Algorithms:
     @staticmethod
-    def int_to_binary_list(num: int):
+    def int_to_binary_list(num: int, pad=32):
         binary_string = bin(num)[2:]
-        padding_length = 32 - len(binary_string)
+        padding_length = pad - len(binary_string)
         padded_binary_string = '0' * padding_length + binary_string
         return [int(bit) for bit in padded_binary_string]
 
     @staticmethod
     def compare_binary_numbers(x: List[int], y: List[int]) -> str:
         """
-        Suppose you have two non-negative integers x, y,
-        each stored in binary representation as arrays of n bits
-        (ordered most significant digit to least significant digit).
-        We want to determine if x > y, y > x, or x = y
+        Compare two non-negative integers represented in binary format.
 
-        Params:
-        - x (List[int]): first binary-represented number
-        - y (List[int]): second binary-represented number
+        Given two non-negative integers, x and y, each stored as binary arrays of n bits,
+        this function determines their relationship: whether x is greater than y, y is greater than x,
+        or if they are equal.
 
-        Time complexity:
-        - Worst case - O(n)
+        Parameters:
+        - x (List[int]): Binary representation of the first non-negative integer.
+        - y (List[int]): Binary representation of the second non-negative integer.
+
+        Returns:
+        - str: A string indicating the comparison result: 'x > y', 'x < y', or 'x = y'.
+
+        Constraints:
+        - Both input numbers have to be binary represented.
+        - The lengths of both input arrays x and y must be equal.
+
+        Time Complexity:
+        - Worst case: O(n)
         """
         assert all(i in {0, 1} for i in x), 'x is not a binary-represented number.'
         assert all(i in {0, 1} for i in y), 'y is not a binary-represented number.'
@@ -39,7 +47,7 @@ class Homework01Algorithms:
         """
         For any number n, such that n is a power of 2, the Star matrix,
         S_n is defined as follows:
-            if n = 1, Sn = [1]
+            if n = 1, S_n = [1]
             if n > 1, S_n =
                 (3S_{n/2} I_{n/2}
                  S_{n/2}  -2S_{n/2})
@@ -54,6 +62,10 @@ class Homework01Algorithms:
 
         Returns:
         - np.ndarray: The result of S_n * v.
+
+        Constraints:
+        - n must be a power of 2.
+        - Length of input vector v has to be n.
 
         Time complexity:
         - Worst case: O(nlogn)
