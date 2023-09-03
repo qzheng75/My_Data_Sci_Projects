@@ -149,8 +149,90 @@ class InClassAlgorithms:
         """
         sorted_arr = sorted(arr)
         return sorted_arr[k]
-
     
+    @staticmethod
+    def strassen_fast_matmul(mat1: np.ndarray, mat2: np.ndarray) -> np.ndarray:
+        """
+        Multiply two matrices using the Strassen algorithm.
+
+        Parameters:
+        - mat1 (np.ndarray): The first input matrix.
+        - mat2 (np.ndarray): The second input matrix.
+
+        Returns:
+        - np.ndarray: The result of matrix multiplication.
+
+        Time complexity:
+        - Worst case: O(n^{log7})
+        """
+        row1, col1 = mat1.shape
+        row2, col2 = mat2.shape
+        assert col1 == row2, f"Shape mismatch between two matrices: get {col1} and {row2}."
+
+        if col1 == 1:
+            return mat1 * mat2
+
+        split_index = col1 // 2
+
+        a00 = mat1[:split_index, :split_index]
+        a01 = mat1[:split_index, split_index:]
+        a10 = mat1[split_index:, :split_index]
+        a11 = mat1[split_index:, split_index:]
+
+        b00 = mat2[:split_index, :split_index]
+        b01 = mat2[:split_index, split_index:]
+        b10 = mat2[split_index:, :split_index]
+        b11 = mat2[split_index:, split_index:]
+
+        # Calculate intermediate matrices
+        M1 = InClassAlgorithms.strassen_fast_matmul(a00 + a11, b00 + b11)
+        M2 = InClassAlgorithms.strassen_fast_matmul(a10 + a11, b00)
+        M3 = InClassAlgorithms.strassen_fast_matmul(a00, b01 - b11)
+        M4 = InClassAlgorithms.strassen_fast_matmul(a11, b10 - b00)
+        M5 = InClassAlgorithms.strassen_fast_matmul(a00 + a01, b11)
+        M6 = InClassAlgorithms.strassen_fast_matmul(a10 - a00, b00 + b01)
+        M7 = InClassAlgorithms.strassen_fast_matmul(a01 - a11, b10 + b11)
+
+        # Calculate result submatrices
+        C00 = M1 + M4 - M5 + M7
+        C01 = M3 + M5
+        C10 = M2 + M4
+        C11 = M1 - M2 + M3 + M6
+
+        # Combine result submatrices
+        result_matrix = np.vstack((np.hstack((C00, C01)), np.hstack((C10, C11))))
+        return result_matrix
+    
+    @staticmethod
+    def fast_pow(base: int, exp: int) -> int:
+        """
+        Calculate the exponentiation of a base raised to a non-negative integer exponent.
+
+        Parameters:
+        - base (int): The base integer.
+        - exp (int): The non-negative integer exponent.
+
+        Returns:
+        - int: The result of 'base' raised to the power of 'exp'.
+
+        Constrants:
+        - his method currently only supports exp >= 0.
+
+        Time complexity:
+        - Worst case: O(logn)
+        """
+        assert exp >= 0, f"This method currently only supports exp >= 0, got exp = {exp}"
+        if exp == 0:
+            return 1
+        if exp == 1:
+            return base
+        if exp % 2 == 0:
+            sqrt = InClassAlgorithms.fast_pow(base, exp // 2)
+            return sqrt * sqrt
+        else:
+            sqrt = InClassAlgorithms.fast_pow(base, (exp - 1) // 2)
+            return sqrt * sqrt * base
+
 
 if __name__ == '__main__':
     # x = InClassAlgorithms.int_to_binary_list(11)
@@ -158,6 +240,21 @@ if __name__ == '__main__':
     # print(InClassAlgorithms.multiply_binary_numbers(x, y))
     test_arr = list(range(1, 31))
     random.shuffle(test_arr)
-    print(test_arr)
-    for i in range(30):
-        print(InClassAlgorithms.k_select(test_arr, i))
+    # print(test_arr)
+    # for i in range(30):
+    #     print(InClassAlgorithms.k_select(test_arr, i))
+
+    matrix_A = np.array([[1, 1, 1, 1],
+                [2, 2, 2, 2],
+                [3, 3, 3, 3],
+                [2, 2, 2, 2]])
+    
+    matrix_B = np.array([[1, 1, 1, 1],
+                [2, 2, 2, 2],
+                [3, 3, 3, 3],
+                [2, 2, 2, 2]])
+    
+    result_matrix = InClassAlgorithms.strassen_fast_matmul(matrix_A, matrix_B)
+
+    print(InClassAlgorithms.fast_pow(2, 10))
+    
