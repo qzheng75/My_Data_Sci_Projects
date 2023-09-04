@@ -2,7 +2,7 @@ from typing import List
 import numpy as np
 
 
-class Homework01Algorithms:
+class Homework01:
     @staticmethod
     def int_to_binary_list(num: int, pad=32):
         binary_string = bin(num)[2:]
@@ -77,20 +77,8 @@ class Homework01Algorithms:
         mid_idx = n // 2
         v_upper = v[0 : mid_idx]
         v_lower = v[mid_idx :]
-        S_v1 = Homework01Algorithms.star_matrix_multiplication(n // 2, v_upper)
-        S_v2 = Homework01Algorithms.star_matrix_multiplication(n // 2, v_lower)
+        S_v1 = Homework01.star_matrix_multiplication(n // 2, v_upper)
+        S_v2 = Homework01.star_matrix_multiplication(n // 2, v_lower)
         S_upper = 3 * S_v1 + v_lower.reshape(-1, 1)
         S_lower = S_v1 - 2 * S_v2
         return np.vstack((S_upper, S_lower))
-
-
-if __name__ == '__main__':
-    x = 68
-    y = 69
-    # print(Homework01Algorithms.compare_binary_numbers(
-    #     Homework01Algorithms.int_to_binary_list(x),
-    #     Homework01Algorithms.int_to_binary_list(y)
-    # ))
-    n = 32
-    # print(Homework01Algorithms.star_matrix_multiplication(n, [1] * n))
-        
