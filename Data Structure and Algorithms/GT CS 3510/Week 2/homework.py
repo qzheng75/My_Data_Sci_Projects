@@ -101,5 +101,3 @@ class Homework02:
             else:
                 return Homework02._k_select_helper(nums1, nums1_start, nums1_end,
                                                    nums2, nums2_start, nums2_mid - 1, k)
-            
-
