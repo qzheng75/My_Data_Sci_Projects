@@ -68,5 +68,3 @@ class InClassAlgo:
             j += 1
             idx += 1
         return res_arr
-    
-
