@@ -1,0 +1,17 @@
+model:
+  latent_dim: 100
+  img_size: 28
+  num_channels: 1
+  sample_interval: 2000
+
+trainer:
+  n_epochs: 100
+  batch_size: 128
+  device: 'cuda'
+  epoch_verbosity: 1
+  batch_verbosity: 100
+
+optimizer:
+  learning_rate: 0.0001
+  b1: 0.5
+  b2: 0.999
