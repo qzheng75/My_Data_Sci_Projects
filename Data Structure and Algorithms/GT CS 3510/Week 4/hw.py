@@ -47,14 +47,6 @@ class HWAlgo:
             if not HWAlgo._dfs_bipartite(graph, nbr, assign_color, visited):
                 return False
         return True
-    
-    @staticmethod
-    def is_half_connected(graph):
-        pass
-
-    @staticmethod
-    def _dfs_half_connect(graph, cur_node, visited):
-        pass
 
 
 if __name__ == '__main__':
