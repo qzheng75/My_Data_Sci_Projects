@@ -37,7 +37,16 @@ class InClassAlgo:
                 InClassAlgo._dfs_connected(graph, nbr, visited)
 
     @staticmethod
-    def is_cyclic(graph):
+    def is_cyclic(graph: List[List[int]]):
+        """
+        Check if a directed graph is cyclic using depth-first search (DFS).
+
+        Parameters:
+        - graph (List[List[int]]): An adjacency list representing the directed graph.
+
+        Returns:
+        - bool: True if the graph contains a cycle, False otherwise.
+        """
         n = len(graph)
         visited = [0] * n
         for i in range(n):
@@ -46,7 +55,18 @@ class InClassAlgo:
         return False
 
     @staticmethod
-    def _dfs_cyclic(graph, cur_node, visited):
+    def _dfs_cyclic(graph: List[List[int]], cur_node: int, visited: List[int]):
+        """
+        Helper function for `is_cyclic` to perform DFS and detect cycles.
+
+        Parameters:
+        - graph (List[List[int]]): An adjacency list representing the directed graph.
+        - cur_node (int): The current node being visited.
+        - visited (List[int]): A list to track visited nodes.
+
+        Returns:
+        - bool: True if a cycle is detected, False otherwise.
+        """
         visited[cur_node] = 1
         for nbr in graph[cur_node]:
             if visited[nbr] == 1:
@@ -58,7 +78,16 @@ class InClassAlgo:
 
     time = 0
     @staticmethod
-    def topological_sort(graph):
+    def topological_sort(graph: List[List[int]]):
+        """
+        Perform topological sorting on a directed acyclic graph (DAG).
+
+        Parameters:
+        - graph (List[List[int]]): An adjacency list representing the DAG.
+
+        Returns:
+        - List[int]: A list of nodes in topological order.
+        """
         global time
         assert not InClassAlgo.is_cyclic(graph), 'Input graph can\'t be cyclic.'
         time = 0
@@ -69,7 +98,18 @@ class InClassAlgo:
         return sorted(visit_dict, key=lambda x: visit_dict[x], reverse=True)
 
     @staticmethod
-    def _dfs_topological_sort(graph, cur_node, first_visit, last_visit, visited):
+    def _dfs_topological_sort(graph: List[List[int]], cur_node: int,
+                              first_visit: List[int], last_visit: List[int], visited: List[bool]):
+        """
+        Helper function for `topological_sort` to perform DFS and compute first and last visit times.
+
+        Parameters:
+        - graph (List[List[int]]): An adjacency list representing the DAG.
+        - cur_node (int): The current node being visited.
+        - first_visit (List[int]): A list to record the first visit time of each node.
+        - last_visit (List[int]): A list to record the last visit time of each node.
+        - visited (List[bool]): A list to track visited nodes.
+        """
         global time
         visited[cur_node] = True
         first_visit[cur_node] = time
