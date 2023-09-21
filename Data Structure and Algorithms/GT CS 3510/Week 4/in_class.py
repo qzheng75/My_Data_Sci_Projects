@@ -37,7 +37,7 @@ class InClassAlgo:
                 InClassAlgo._dfs_connected(graph, nbr, visited)
 
     @staticmethod
-    def is_cyclic(graph: List[List[int]]):
+    def is_cyclic(graph: List[List[int]]) -> bool:
         """
         Check if a directed graph is cyclic using depth-first search (DFS).
 
@@ -78,7 +78,7 @@ class InClassAlgo:
 
     time = 0
     @staticmethod
-    def topological_sort(graph: List[List[int]]):
+    def topological_sort(graph: List[List[int]]) -> List[int]:
         """
         Perform topological sorting on a directed acyclic graph (DAG).
 
@@ -120,7 +120,98 @@ class InClassAlgo:
         last_visit[cur_node] = time
         time += 1
 
+    @staticmethod
+    def strongly_connected_components(graph: List[List[int]]) -> dict[int, List[int]]:
+        """
+        Finds strongly connected components in a directed graph using Kosaraju's algorithm.
+
+        Parameters:
+            graph (dict): A dictionary representing a directed graph as an adjacency list.
+
+        Returns:
+            dict: A dictionary where keys represent indices of strongly connected components
+                  in the graph, and values are lists of nodes in each component.
+        """
+        components = {}
+        component_idx = 0
+        stack = []
+        n = len(graph)
+        visited = [False] * n
+        for i in range(n):
+            if not visited[i]:
+                InClassAlgo._dfs_scc_01(graph, i, visited, stack)
+
+        visited = [False] * n
+        graph_t = InClassAlgo._transpose_graph(graph)
+        while len(stack) != 0:
+            cur_node = stack.pop()
+            if not visited[cur_node]:
+                components.update({component_idx: []})
+                InClassAlgo._dfs_scc_02(graph_t, cur_node, visited, components, component_idx)
+                component_idx += 1
+        return components
+
+    @staticmethod
+    def _dfs_scc_01(graph: List[List[int]], cur_node: int, visited: List[bool], stack: List[int]) -> None:
+        """
+        Depth-first search (DFS) function used in the first pass of Kosaraju's algorithm to fill the stack.
+
+        Parameters:
+            graph (dict): A dictionary representing a directed graph as an adjacency list.
+            cur_node (int): The current node being processed.
+            visited (list): A list to track visited nodes.
+            stack (list): A stack to store nodes in the order of their completion.
+
+        Returns:
+            None
+        """
+        visited[cur_node] = True
+        for nbr in graph[cur_node]:
+            if not visited[nbr]:
+                InClassAlgo._dfs_scc_01(graph, nbr, visited, stack)
+        stack.append(cur_node)
+
+    @staticmethod
+    def _dfs_scc_02(graph: List[List[int]], cur_node: int, visited: List[bool],
+                    components: dict[int, List[int]], component_idx: int) -> None:
+        """
+        Depth-first search (DFS) function used in the second pass of Kosaraju's algorithm to find components.
+
+        Parameters:
+            graph (dict): A dictionary representing a directed graph as an adjacency list.
+            cur_node (int): The current node being processed.
+            visited (list): A list to track visited nodes.
+            components (dict): A dictionary to store strongly connected components.
+            component_idx (int): The current component index.
+
+        Returns:
+            None
+        """
+        components[component_idx].append(cur_node)
+        visited[cur_node] = True
+        for nbr in graph[cur_node]:
+            if not visited[nbr]:
+                InClassAlgo._dfs_scc_02(graph, nbr, visited, components, component_idx)
+
+    @staticmethod
+    def _transpose_graph(graph: List[List[int]]) -> List[List[int]]:
+        """
+        Transposes a directed graph represented as an adjacency list.
+
+        Parameters:
+            graph (dict): A dictionary representing a directed graph as an adjacency list.
+
+        Returns:
+            list: A transposed graph represented as an adjacency list.
+        """
+        graph_t = [[] for _ in range(len(graph))]
+        for i in range(len(graph)):
+            node = graph[i]
+            for nbr in node:
+                graph_t[nbr].append(i)
+        return graph_t
+
 
 if __name__ == '__main__':
-    graph = [[1, 3], [2], [0], [1]]
-    print(InClassAlgo.topological_sort(graph))
+    graph = [[2, 7], [0, 6], [3], [5], [0, 8], [9], [8], [5, 6], [7], [2]]
+    print(InClassAlgo.strongly_connected_components(graph))
