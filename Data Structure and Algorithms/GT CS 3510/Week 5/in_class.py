@@ -192,3 +192,4 @@ if __name__ == '__main__':
              {5: 2, 7: 1, 8: 6}, {0: 8, 1: 11, 6: 1, 8: 7},
              {2: 2, 6: 6, 7: 7}]
     print(InClassAlgo.kruskal_MST(graph))
+    print(InClassAlgo.prim_MST(graph, 0))

@@ -1,7 +1,7 @@
 from typing import List
 
 
-class InClassAlgo:
+class Helpers:
 
     @staticmethod
     def graph_is_connected(graph: List[List[int]]) -> bool:
@@ -15,7 +15,7 @@ class InClassAlgo:
             - bool: True if the graph is connected, False otherwise.
         """
         visited = [False] * len(graph)
-        InClassAlgo._dfs_connected(graph, 0, visited)
+        Helpers._dfs_connected(graph, 0, visited)
         return all(visited)
 
     @staticmethod
@@ -34,7 +34,7 @@ class InClassAlgo:
         visited[cur_node] = True
         for nbr in graph[cur_node]:
             if not visited[nbr]:
-                InClassAlgo._dfs_connected(graph, nbr, visited)
+                Helpers._dfs_connected(graph, nbr, visited)
 
     @staticmethod
     def is_cyclic(graph: List[List[int]]) -> bool:
@@ -50,7 +50,7 @@ class InClassAlgo:
         n = len(graph)
         visited = [0] * n
         for i in range(n):
-            if visited[i] == 0 and InClassAlgo._dfs_cyclic(graph, i, visited):
+            if visited[i] == 0 and Helpers._dfs_cyclic(graph, i, visited):
                 return True
         return False
 
@@ -71,7 +71,7 @@ class InClassAlgo:
         for nbr in graph[cur_node]:
             if visited[nbr] == 1:
                 return True
-            elif visited[nbr] == 0 and InClassAlgo._dfs_cyclic(graph, nbr, visited):
+            elif visited[nbr] == 0 and Helpers._dfs_cyclic(graph, nbr, visited):
                 return True
         visited[cur_node] = 2
         return False
@@ -89,11 +89,13 @@ class InClassAlgo:
         - List[int]: A list of nodes in topological order.
         """
         global time
-        assert not InClassAlgo.is_cyclic(graph), 'Input graph can\'t be cyclic.'
+        assert not Helpers.is_cyclic(graph), 'Input graph can\'t be cyclic.'
         time = 0
         n = len(graph)
         first_visit, last_visit, visited = [0] * n, [0] * n, [False] * n
-        InClassAlgo._dfs_topological_sort(graph, 0, first_visit, last_visit, visited)
+        for i in range(len(graph)):
+            if not visited[i]:
+                Helpers._dfs_topological_sort(graph, i, first_visit, last_visit, visited)
         visit_dict = dict(zip(range(len(last_visit)), last_visit))
         return sorted(visit_dict, key=lambda x: visit_dict[x], reverse=True)
 
@@ -116,7 +118,7 @@ class InClassAlgo:
         time += 1
         for nbr in graph[cur_node]:
             if not visited[nbr]:
-                InClassAlgo._dfs_topological_sort(graph, nbr, first_visit, last_visit, visited)
+                Helpers._dfs_topological_sort(graph, nbr, first_visit, last_visit, visited)
         last_visit[cur_node] = time
         time += 1
 
@@ -126,7 +128,7 @@ class InClassAlgo:
         Finds strongly connected components in a directed graph using Kosaraju's algorithm.
 
         Parameters:
-            graph (List[List[int]]): A directed graph represented as an adjacency list.
+            graph (dict): A dictionary representing a directed graph as an adjacency list.
 
         Returns:
             dict: A dictionary where keys represent indices of strongly connected components
@@ -139,15 +141,15 @@ class InClassAlgo:
         visited = [False] * n
         for i in range(n):
             if not visited[i]:
-                InClassAlgo._dfs_scc_01(graph, i, visited, stack)
+                Helpers._dfs_scc_01(graph, i, visited, stack)
 
         visited = [False] * n
-        graph_t = InClassAlgo._transpose_graph(graph)
+        graph_t = Helpers._transpose_graph(graph)
         while len(stack) != 0:
             cur_node = stack.pop()
             if not visited[cur_node]:
                 components.update({component_idx: []})
-                InClassAlgo._dfs_scc_02(graph_t, cur_node, visited, components, component_idx)
+                Helpers._dfs_scc_02(graph_t, cur_node, visited, components, component_idx)
                 component_idx += 1
         return components
 
@@ -168,7 +170,7 @@ class InClassAlgo:
         visited[cur_node] = True
         for nbr in graph[cur_node]:
             if not visited[nbr]:
-                InClassAlgo._dfs_scc_01(graph, nbr, visited, stack)
+                Helpers._dfs_scc_01(graph, nbr, visited, stack)
         stack.append(cur_node)
 
     @staticmethod
@@ -191,7 +193,7 @@ class InClassAlgo:
         visited[cur_node] = True
         for nbr in graph[cur_node]:
             if not visited[nbr]:
-                InClassAlgo._dfs_scc_02(graph, nbr, visited, components, component_idx)
+                Helpers._dfs_scc_02(graph, nbr, visited, components, component_idx)
 
     @staticmethod
     def _transpose_graph(graph: List[List[int]]) -> List[List[int]]:
@@ -210,8 +212,3 @@ class InClassAlgo:
             for nbr in node:
                 graph_t[nbr].append(i)
         return graph_t
-
-
-if __name__ == '__main__':
-    graph = [[2, 7], [0, 6], [3], [5], [0, 8], [9], [8], [5, 6], [7], [2]]
-    print(InClassAlgo.strongly_connected_components(graph))

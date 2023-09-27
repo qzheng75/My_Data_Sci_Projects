@@ -1,4 +1,5 @@
 from typing import List
+from in_class import InClassAlgo
 
 count = 0
 
@@ -6,28 +7,12 @@ class HWAlgo:
 
     @staticmethod
     def num_nodes_not_in_cycle(graph: List[List[int]]):
-        global count
-        visited = [0] * len(graph)
-        for nd in range(len(graph)):
-            if visited[nd] == 0:
-                HWAlgo._dfs_cycle(graph, nd, visited)
-        return len(graph) - count
-
-    @staticmethod
-    def _dfs_cycle(graph: List[List[int]], cur_node: int, visited: List[int]) -> bool:
-        global count
-        visited[cur_node] = 1
-        for nbr in graph[cur_node]:
-            if visited[nbr] == 1:
+        scc = InClassAlgo.strongly_connected_components(graph)
+        count = 0
+        for _, components in scc.items():
+            if len(components) == 1:
                 count += 1
-                return True
-            if visited[nbr] == 0:
-                child_cycle = HWAlgo._dfs_cycle(graph, nbr, visited)
-                if child_cycle:
-                    count += 1
-                return True
-        visited[cur_node] = 2
-        return False
+        return count
     
     @staticmethod
     def is_bipartite(graph: List[List[int]]) -> bool:
@@ -47,8 +32,17 @@ class HWAlgo:
             if not HWAlgo._dfs_bipartite(graph, nbr, assign_color, visited):
                 return False
         return True
-
+    
+    @staticmethod
+    def half_connected(graph: List[List[int]]) -> bool:
+        if InClassAlgo.graph_is_connected(graph):
+            raise ValueError("Currently support only DAGs.")
+        order = InClassAlgo.topological_sort(graph)
+        for i in range(0, len(order) - 1):
+            if i + 1 not in graph[i]:
+                return False
+        return True
 
 if __name__ == '__main__':
-    graph = [[1,2,3],[0,2],[0,1,3],[0,2]]
-    print(HWAlgo.is_bipartite(graph))
+    graph = [[1], [2], [4], [2], [5], [1]]
+    print(HWAlgo.num_nodes_not_in_cycle(graph))
